@@ -85,7 +85,7 @@ Smart_Purchase/
 
 ## Screenshots & Demo
 
-Screenshots and a demonstration video will be added soon.
+Smart_Purchase/demo.mp4
 
 ## License
 
