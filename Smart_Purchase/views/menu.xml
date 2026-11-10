@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_sp_root"
+            name="Smart Reorder"
+            parent="purchase.menu_purchase_root"
+            sequence="30"
+            groups="purchase.group_purchase_user"/>
+
+    <menuitem id="menu_sp_reorder_alerts"
+            name="Reorder Alerts"
+            parent="menu_sp_root"
+            action="action_sp_reorder_alerts"
+            sequence="10"/>
+
+    <menuitem id="menu_sp_supplier_comparison"
+            name="Supplier Comparison"
+            parent="menu_sp_root"
+            action="action_sp_supplier_comparison"
+            sequence="20"/>
+</odoo>

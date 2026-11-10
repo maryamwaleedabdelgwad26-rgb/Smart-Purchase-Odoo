@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="supplierinfo_list_view_sp" model="ir.ui.view">
+        <field name="name">product.supplierinfo.list.smart.purchase</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <list string='Supplier Comparison' decoration-success='sp_is_best' create='false'>
+                <field name="product_tmpl_id"/>
+                <field name="partner_id"/>
+                <field name="min_qty"/>
+                <field name="price"/>
+                <field name="currency_id" optional="show"/>
+                <field name="sp_price_company" string="Price (EGP)"/>
+                <field name="delay" string="Lead Time (days)"/>
+                <field name="sp_is_best" widget="boolean"/>
+                <button name="action_create_rfq" type="object"
+                        string="Create Purchase Request" icon="fa-shopping-cart"/>
+            </list>
+        </field>
+    </record>
+    <record id="supplierinfo_search_view_sp" model="ir.ui.view">
+        <field name="name">product.supplierinfo.search.smart.purchase</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_tmpl_id"/>
+                <field name="partner_id"/>
+                <filter name="groupby_product" string="Group By Product"
+                            context="{'group_by': 'product_tmpl_id'}"/>
+                            <filter name="groupby_vendor" string="Group By Vendor"
+                            context="{'group_by': 'partner_id'}"/>     
+            </search>
+        </field>
+    </record>
+    <record id="action_sp_supplier_comparison" model="ir.actions.act_window">
+        <field name="name">Supplier Comparison</field>
+        <field name="res_model">product.supplierinfo</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_groupby_product': 1}</field>
+        <field name="search_view_id" ref="supplierinfo_search_view_sp"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('supplierinfo_list_view_sp')})]"/>
+    </record>
+</odoo>

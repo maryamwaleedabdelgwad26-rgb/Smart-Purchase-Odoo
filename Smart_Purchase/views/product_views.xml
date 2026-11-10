@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_from_view_sp" model="ir.ui.view">
+        <field name="name">product.template.from.smart.purchase</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger" role="alert" invisible="not sp_needs_reorder">
+                        <strong>Reorder Needed:</strong>
+                        This product is running low. Please create a purchase order.
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Reorder Alert" name="sp_reorder" invisible="not is_storable">
+                        <group>
+                            <group>
+                                <field name="sp_min_qty"/>
+                                <field name="sp_reorder_qty"/>
+                                <field name="qty_available"/>
+                                <field name="virtual_available" string="Forecasted Quantity"/>
+                                <field name="sp_needs_reorder"/>
+                            </group>
+                        </group>
+                        <button name="action_sp_create_po" type="object"
+                            string="Create Purchase Order (best vendor)"
+                            class="btn-primary"
+                            invisible="not sp_needs_reorder"/>
+                        
+                </page>
+            </xpath>
+
+        </field>
+
+
+    </record>
+
+    <record id="product_template_list_view_sp" model="ir.ui.view">
+        <field name="name">product.template.list.smart.purchase</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Reorder Alerts" decoration-danger="sp_needs_reorder"
+                  create="false">
+                <field name="name"/>
+                <field name="default_code"/>
+                <field name="qty_available"/>
+                <field name="virtual_available" string="Forecasted"/>
+                <field name="sp_min_qty"/>
+                <field name="sp_reorder_qty"/>
+                <field name="sp_needs_reorder" widget="boolean"/>
+                <button name="action_sp_create_po" type="object"
+                        string="Add Product" icon="fa-shopping-cart"
+                        invisible="not sp_needs_reorder"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_template_search_view_sp" model="ir.ui.view">
+        <field name="name">product.template.search.smart.purchase</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="default_code"/>
+                <filter name="sp_reorder" string="Needs Reorder"
+                        domain="[('sp_needs_reorder', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_sp_reorder_alerts" model="ir.actions.act_window">
+        <field name="name">Reorder Alerts</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_storable','=',True)]</field>
+        <field name="context">{'search_default_sp_reorder':1}</field>
+        <field name="search_view_id" ref="product_template_search_view_sp"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('product_template_list_view_sp')}),
+            (0, 0, {'view_mode': 'form'})]"/>
+    </record>
+</odoo>
